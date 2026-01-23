@@ -45,12 +45,11 @@ jobs:
 
       - name: Run DRC (headless)
         run: |
-          mkdir -p out
-          klayout -b -r "rules/${{ steps.cfg.outputs.entry }}" \
+          klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" \
             -rd input="${{ steps.cfg.outputs.gds }}" \
             -rd report="${{ steps.cfg.outputs.report }}"
 
       - uses: actions/upload-artifact@v4
         with:
           name: drc-report
-          path: out/
+          path: log/

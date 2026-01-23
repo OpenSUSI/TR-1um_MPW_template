@@ -35,21 +35,12 @@ jobs:
             f.write(f"report={report}\n")
           PY
 
-      - name: Use variable
-        run: |
-          echo ${{ steps.cfg.outputs.gds }}
-          echo ${{ steps.cfg.outputs.repo }}
-          echo ${{ steps.cfg.outputs.ref }}
-          echo ${{ steps.cfg.outputs.entry }}
-          echo ${{ steps.cfg.outputs.report }}
-
-      - name: Checkout ruleset repo (with includes)
+      - name: Checkout libs.tech from ruleset repo 
         run: |
           git clone --filter=blob:none --sparse --branch "${{ steps.cfg.outputs.ref }}" "${{ steps.cfg.outputs.repo }}" TR-1um
           cd TR-1um
           git sparse-checkout add ${{ steps.cfg.outputs.entry }}
-          cd ..
-          test -f "TR-1um/${{ steps.cfg.outputs.entry }}"
+          cd ..     
           ls -la TR-1um
 
       - name: Run DRC (headless)

@@ -26,10 +26,11 @@ jobs:
           repo    = cfg["drc"]["repo"]
           entry   = cfg["drc"]["entry"]
           report  = cfg["drc"]["report"]
-          print(gds)
-          print(repo)
-          print(entry)
-          print(report)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+            f.write(f"gds={gds}\n")
+            f.write(f"repo={repo}\n")
+            f.write(f"entry={entry}\n")
+            f.write(f"report={report}\n")
           PY
 
       - name: Use variable

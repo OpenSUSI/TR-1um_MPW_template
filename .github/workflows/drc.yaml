@@ -23,7 +23,7 @@ jobs:
           import yaml, os, pathlib
           cfg = yaml.safe_load(pathlib.Path("info.yaml").read_text())
           gds = cfg["gds"]["file"]
-          rules_url = cfg["drc"]["rules_url"]
+          url = cfg["drc"]["rules_url"]
           report = cfg["drc"]["report"]
           print(gds)
           print(rules_url)
@@ -33,7 +33,7 @@ jobs:
       - name: Use variable
         run: |
           echo ${{ steps.cfg.outputs.gds }}
-          echo ${{ steps.cfg.outputs.rules_url }}
+          echo ${{ steps.cfg.outputs.url }}
           echo ${{ steps.cfg.outputs.report }}
 
       - name: Checkout ruleset repo (with includes)

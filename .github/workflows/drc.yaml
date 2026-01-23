@@ -25,10 +25,9 @@ jobs:
           gds = cfg["gds"]["file"]
           rules_url = cfg["drc"]["rules_url"]
           report = cfg["drc"]["report"]
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-            f.write(f"gds={gds}\n")
-            f.write(f"rules_url={rules_url}\n")
-            f.write(f"report={report}\n")
+          print(gds)
+          print(rules_url)
+          print(report)
           PY
 
       - name: Use variable

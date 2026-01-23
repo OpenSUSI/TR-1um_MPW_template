@@ -22,9 +22,9 @@ jobs:
           ls -la .
           python3 - << 'PY'
           import yaml, os, pathlib
-          cfg = yaml.safe_load(pathlib.Path("info.yaml").read_text())
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-            f.write("TEST")
+          cfg = yaml.safe_load(pathlib.Path('info.yaml').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+            f.write('TEST')
           PY
 
       - name: Checkout ruleset repo (with includes)

@@ -24,7 +24,7 @@ cir:
 drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
   ref:    "v0.1"
-  entry:  "lib.tech/klayout"
+  entry:  "klayout"
   report: "log/report.lyrdb"
 
 yaml_version: 6

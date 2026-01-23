@@ -47,11 +47,11 @@ jobs:
         run: |
           git clone --filter=blob:none --sparse --branch "${{ steps.cfg.outputs.ref }}" "${{ steps.cfg.outputs.repo }}" TR-1um
           cd TR-1um
-          git sparse-checkout add "${{ steps.cfg.outputs.entry }}"
+          git sparse-checkout add ${{ steps.cfg.outputs.entry }}
           cd ..
           test -f "TR-1um/${{ steps.cfg.outputs.entry }}"
           ls -la TR-1um
-          
+
       - name: Run DRC (headless)
         run: |
           mkdir -p out

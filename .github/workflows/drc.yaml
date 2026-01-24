@@ -15,6 +15,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y klayout git
           python3 -m pip install --user pyyaml
+          klayout -v
 
       - name: Read info.yaml
         id: cfg

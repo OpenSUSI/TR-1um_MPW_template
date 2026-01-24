@@ -25,6 +25,6 @@ drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
   ref:    "v0.1"
   entry:  "libs.tech"
-  report: "log/report.lyrdb"
+  report: "report.lyrdb"
 
 yaml_version: 6

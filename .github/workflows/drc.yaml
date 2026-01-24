@@ -44,9 +44,7 @@ jobs:
 
       - name: Run DRC (headless)
         run: |
-          klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" \
-            -rd input="${{ steps.cfg.outputs.gds }}" \
-            -rd top_cell="${{ steps.cfg.outputs.cell }}" 
+          klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" -rd input="${{ steps.cfg.outputs.gds }}" -rd top_cell="${{ steps.cfg.outputs.cell }}" 
 
       - uses: actions/upload-artifact@v4
         with:

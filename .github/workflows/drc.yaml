@@ -87,7 +87,7 @@ jobs:
           klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" \
             -rd input="${{ steps.cfg.outputs.gds }}" \
             -rd top_cell="${{ steps.cfg.outputs.cell }}" \
-            -rd report="../log/${{ steps.cfg.outputs.report }}"
+            -rd report="${{ steps.cfg.outputs.report }}"
 
       # Step 6: Upload DRC results as GitHub Actions artifact
       # This step packages the DRC reports from the log/ directory and makes them available
@@ -97,4 +97,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: drc-report
-          path: log/
+          path: src/${{ steps.cfg.outputs.report }}

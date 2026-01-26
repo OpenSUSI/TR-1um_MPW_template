@@ -22,7 +22,7 @@ jobs:
       # - KLayout: Open-source layout viewer and editor with DRC capabilities
       # - Python3: Required to parse the info.yaml configuration file
       # - PyYAML: Python library for reading YAML configuration files
-      - name: Install KLayout + deps
+      - name: Install pip3 deps
         run: |
           python3 -m pip install --user pyyaml
           python3 -m pip install --user click
@@ -95,17 +95,16 @@ jobs:
 
       - name: Checkout libs.tech from ruleset repo 
         run: |
-          git clone --filter=blob:none --sparse --branch "${{ steps.cfg.outputs.ref }}"\
-             "${{ steps.cfg.outputs.repo }}" TR-1um
-          ( cd TR-1um ; git sparse-checkout add ${{ steps.cfg.outputs.entry }} )
-    #
+          git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.cfg.outputs.ref }}"\
+             "${{ needs.Precheck.cfg.outputs.repo }}" TR-1um
+          ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.cfg.outputs.entry }} )
+    
       - name: Run DRC (headless)
         run: |
           klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" \
-            -rd input="${{ steps.cfg.outputs.gds }}" \
-            -rd top_cell="${{ steps.cfg.outputs.cell }}" \
-            -rd report="${{ steps.cfg.outputs.report }}"
-
+            -rd input="${{ needs.Precheck.cfg.outputs.gds }}" \
+            -rd top_cell="${{ needs.Precheck.cfg.outputs.cell }}" \
+            -rd report="${{ needs.Precheck.cfg.outputs.report }}"
       # Step 6: Upload DRC results as GitHub Actions artifact
       # This step packages the DRC reports from the log/ directory and makes them available
       # for download from the GitHub Actions run summary page.
@@ -114,4 +113,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: drc-report
-          path: src/${{ steps.cfg.outputs.report }}
+          path: src/${{ needs.Precheck.cfg.outputs.report }}

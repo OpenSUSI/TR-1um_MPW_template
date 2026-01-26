@@ -24,8 +24,6 @@ jobs:
       # - PyYAML: Python library for reading YAML configuration files
       - name: Install KLayout + deps
         run: |
-          sudo apt-get update
-          sudo apt-get install -y klayout git
           python3 -m pip install --user pyyaml
           python3 -m pip install --user click
           python3 -m pip install --user klayout
@@ -76,18 +74,32 @@ jobs:
              "${{ steps.cfg.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ steps.cfg.outputs.entry }} )
 
-      # This step runs the actual Design Rule Check on the GDS file using KLayout.
-      # Parameters:
-      # - -b: Batch/headless mode (no GUI)
-      # - -r: Specifies the DRC rules file to use
-      # - -rd input: Input GDS file path
-      # - -rd top_cell: Top-level cell to check
-      # The DRC check verifies the layout against manufacturing rules and generates a report
+      - name: Run python script
+        run: |
+          python3 script/pre_check.py -top "${{ steps.cfg.outputs.cell }}" \
+            -input "${{ steps.cfg.outputs.gds }}"
 
   drc:
     runs-on: ubuntu-latest
     needs: precheck
     steps:
+      - uses: actions/checkout@v4
+      # Step 2: Install required dependencies and tools
+      # - KLayout: Open-source layout viewer and editor with DRC capabilities
+      # - Python3: Required to parse the info.yaml configuration file
+      # - PyYAML: Python library for reading YAML configuration files
+      - name: Install KLayout + deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y klayout git
+          python3 -m pip install --user pyyaml
+
+      - name: Checkout libs.tech from ruleset repo 
+        run: |
+          git clone --filter=blob:none --sparse --branch "${{ steps.cfg.outputs.ref }}"\
+             "${{ steps.cfg.outputs.repo }}" TR-1um
+          ( cd TR-1um ; git sparse-checkout add ${{ steps.cfg.outputs.entry }} )
+    #
       - name: Run DRC (headless)
         run: |
           klayout -b -r "TR-1um/libs.tech/klayout/drc/run.drc" \

@@ -76,7 +76,7 @@ jobs:
       - name: Run python script
         run: |
           python3 script/pre_check.py -top "${{ steps.cfg.outputs.cell }}" \
-            -input "${{ steps.cfg.outputs.gds }}"
+            "${{ steps.cfg.outputs.gds }}"
 
   drc:
     runs-on: ubuntu-latest

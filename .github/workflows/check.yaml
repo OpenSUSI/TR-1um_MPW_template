@@ -27,7 +27,6 @@ jobs:
           python3 -m pip install --user pyyaml
           python3 -m pip install --user click
           python3 -m pip install --user klayout
-          klayout -v
 
       # Step 3: Parse configuration from info.yaml
       # This step reads the DRC configuration parameters from the project info.yaml file:
@@ -93,6 +92,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y klayout git
           python3 -m pip install --user pyyaml
+          klayout -v
 
       - name: Checkout libs.tech from ruleset repo 
         run: |

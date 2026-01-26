@@ -7,6 +7,7 @@
 The GitHub CI/CD actions will perform the following steps.
 
 **Pre-check**
+
 The pre-check validates that:
 
 - The top cell name matches the entry in info.yaml (top_cell:).
@@ -19,8 +20,6 @@ The pre-check validates that:
 
 - The top cell includes one of the OpenSUSI-recommended frame cells OSS_FRAME or OSS_FRAME_TEG.
 
-- The top cell must preserve open space for corner-reserved areas.
-  
   
 ![OpenSUSI MPW](docs/OpenSUSI-MPW.png)
 
@@ -28,5 +27,10 @@ The pre-check validates that:
 
 
 **DRC**
+
 The DRC stage performs:
+
 - KLayout DRC(Drawing) checks and Antenna checks.
+
+- DRC also check the top cell must preserve open space for corner-reserved areas.
+

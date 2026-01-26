@@ -11,12 +11,11 @@ The pre-check validates that:
 
 - The top cell name matches the entry in info.yaml (top_cell:).
 
-- The top cell is MUST unique (not plural).
+- The top cell name must be unique (not plural).
 
 - The top cell drawing area fits within the range (-1250, -1250) to (1250, 1250).
 
-- The top cell includes one of the OpenSUSI-recommended frame cells below
-    OSS_FRAME or OSS_FRAME_TEG.
+- The top cell includes one of the OpenSUSI-recommended frame cells OSS_FRAME or OSS_FRAME_TEG.
 
 - The top cell must preserve open space for corner-reserved areas.
   

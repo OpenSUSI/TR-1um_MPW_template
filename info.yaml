@@ -13,17 +13,21 @@ project:
 
 # Your top module name must start with "tr-1um_". Make it unique by including your github username:
 gds:
-  file:     "src/tr-1um_example.gds"
+  file:     "tr-1um_example.gds"
   top_cell: "TOP"
 #
 cir:
-  files:    "src/tr-1um_example.cir"
-
+  file:     "tr-1um_example.cir"
+#
+# Your MDP file start with "IP62_". Make it unique by including your github username:
+mdp:
+  file:     "IP62_example.gds"
+#
 # Donot modify below this line unless you know what you are doing
 # DRC ruleset repository information
 drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
-  ref:    "v0.1"
+  ref:    "Action3D"    # Branch or tag name
   entry:  "libs.tech"
   report: "report.lyrdb"
 

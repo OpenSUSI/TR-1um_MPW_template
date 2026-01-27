@@ -18,13 +18,11 @@ The pre-check validates that:
 
 - The top cell drawing area fits within the range (-1250, -1250) to (1250, 1250).
 
-- The top cell includes one of the OpenSUSI-recommended frame cells OSS_FRAME or OSS_FRAME_TEG.
-
+- The top cell includes one of the OpenSUSI recommended frame cells OSS_FRAME or OSS_FRAME_TEG.
   
 ![OpenSUSI MPW](docs/OpenSUSI-MPW.png)
 
 ![OpenSUSI MPW](docs/OpenSUSI-MPW-TEG.png)
-
 
 **DRC**
 

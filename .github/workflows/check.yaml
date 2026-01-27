@@ -111,6 +111,7 @@ jobs:
   MDP:
     runs-on: ubuntu-latest
     # Ensure Precheck completes and make its outputs available.
+    needs: Precheck
     needs: DRC
     steps:
       # Step 1: Clone the repository to get the project files

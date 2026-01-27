@@ -32,3 +32,15 @@ The DRC stage performs:
 
 - DRC also check the top cell must preserve open space for corner-reserved areas.
 
+
+![OpenSUSI MPW](docs/OpenSUSI-MPW_SUBMIT.png)
+
+**MDP**
+
+The MDP stage performs the following:
+
+- Using KLayout’s DRC functionality, it generates the IP62 MASK and DLXXX layer GDSII for final tape-out from the TR-1um Drawing Layers.
+
+- The resulting IP62 GDSII can be downloaded for reference and further verification.
+
+

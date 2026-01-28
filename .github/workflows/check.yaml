@@ -148,7 +148,7 @@ jobs:
       - name: Run IP62 DRC (headless)
         run: |
           klayout -b -r TR-1um/libs.tech/klayout/drc/run_IP62.drc \
-            -rd input=mdp/${{ needs.Precheck.outputs.output }}
+            -rd input=mdp/${{ needs.Precheck.outputs.output }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd report=mdp/${{ needs.Precheck.outputs.report }}
 

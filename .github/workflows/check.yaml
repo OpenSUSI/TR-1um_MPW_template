@@ -105,11 +105,12 @@ jobs:
           klayout -b -r TR-1um/libs.tech/klayout/drc/run.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
-            -rd report=log/${{ needs.Precheck.outputs.report }}
+            -rd report=${{ needs.Precheck.outputs.report }}
 
       # Upload DRC report (if generated).
       - uses: actions/upload-artifact@v4
-        if: ${{ hashFiles(format('log/{0}', needs.Precheck.outputs.report)) != '' }}
+        if: ${{ hashFiles(format('{0}', needs.Precheck.outputs.report)) != '' }}
+          mv ${{ needs.Precheck.outputs.report }} log/${{ needs.Precheck.outputs.report }}
         with:
           name: drc-report
           path: log/${{ needs.Precheck.outputs.report }}

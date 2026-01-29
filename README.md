@@ -12,7 +12,7 @@ The pre-check validates that:
 
 - The top cell name matches the entry in info.yaml (top_cell:).
 
-- The top cell name must be unique (not plural).
+- The top cell must be unique (not plural).
 
 - The top cell database unit (dbu) must be 0.001um
 
@@ -32,6 +32,11 @@ The DRC stage performs:
 
 - DRC also check the top cell must preserve open space for corner-reserved areas.
 
+**DRC**
+
+The DRC stage performs:
+
+- KLayout LVS(Drawing) checks.
 
 ![OpenSUSI MPW](docs/OpenSUSI-MPW_SUBMIT.png)
 
@@ -43,4 +48,5 @@ The MDP stage performs the following:
 
 - The resulting IP62 GDSII can be downloaded for reference and further verification.
 
+- KLayout DRC(MASK) checks and Antenna checks.
 

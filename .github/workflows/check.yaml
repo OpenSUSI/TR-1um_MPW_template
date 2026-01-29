@@ -1,41 +1,46 @@
-# Design Rule Check (DRC) Workflow
-# This workflow automates the DRC process using KLayout to verify that the GDS design
-# meets all the manufacturing rules defined in the technology ruleset
+# Design-rule workflow
+# Runs KLayout-based DRC/MDP checks to validate the submitted GDS against
+# foundry technology rules.
 name: check
 
-# Workflow trigger conditions
+# Workflow triggers.
 on:
-  # Automatically run DRC on every push to the repository
+  # Run on push.
   push:
-  # Allow manual workflow dispatch from GitHub Actions UI
+  # Allow manual runs from the Actions UI.
   workflow_dispatch:
 
 jobs:
-  # DRC job definition - executes on Ubuntu Latest Runner
+  # Precheck: parse config and run validation.
   Precheck:
     runs-on: ubuntu-latest
-    # Expose parsed configuration to downstream jobs via job outputs.
+    # Expose parsed configuration to downstream jobs.
     outputs:
-      gds:    ${{ steps.cfg.outputs.gds }}
-      cell:   ${{ steps.cfg.outputs.cell }}
-      repo:   ${{ steps.cfg.outputs.repo }}
-      ref:    ${{ steps.cfg.outputs.ref }}
-      entry:  ${{ steps.cfg.outputs.entry }}
-      report: ${{ steps.cfg.outputs.report }}
-      output: ${{ steps.cfg.outputs.output }}
+      gds:     ${{ steps.cfg.outputs.gds }}
+      cell:    ${{ steps.cfg.outputs.cell }}
+      circuit: ${{ steps.cfg.outputs.circuit }}
+      output:  ${{ steps.cfg.outputs.output }}
+      repo:    ${{ steps.cfg.outputs.repo }}
+      ref:     ${{ steps.cfg.outputs.ref }}
+      entry:   ${{ steps.cfg.outputs.entry }}
+      report:  ${{ steps.cfg.outputs.report }}
     steps:
-      # Step 1: Clone the repository to get the project files
+      # Checkout repository.
       - uses: actions/checkout@v4
 
-      # Step 2: Install required dependencies and tools
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Install Python dependencies used by the precheck script.
       - name: Install pip3 deps
         run: |
           python3 -m pip install --user pyyaml
           python3 -m pip install --user click
           python3 -m pip install --user klayout
 
-      # Step 3: Parse configuration from info.yaml
-      # This step reads the DRC configuration parameters from the project info.yaml file:
+      # Read DRC configuration from info.yaml.
       - name: Read info.yaml
         id: cfg
         run: |
@@ -45,6 +50,7 @@ jobs:
           gds     = cfg["gds"]["file"]
           cell    = cfg["gds"]["top_cell"]
           output  = cfg["mdp"]["file"]
+          circuit = cfg["lvs"]["file"]
           repo    = cfg["drc"]["repo"]
           ref     = cfg["drc"]["ref"]
           entry   = cfg["drc"]["entry"]
@@ -52,6 +58,7 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
             f.write(f"gds={gds}\n")
             f.write(f"cell={cell}\n")
+            f.write(f"circuit={circuit}\n")
             f.write(f"repo={repo}\n")
             f.write(f"ref={ref}\n")
             f.write(f"entry={entry}\n")
@@ -59,87 +66,112 @@ jobs:
             f.write(f"output={output}\n")
           PY
 
-      # Step 4: Clone the DRC ruleset repository
-      - name: Checkout libs.tech from ruleset repo 
+      # Fetch ruleset (sparse checkout).
+      - name: Checkout libs.tech from ruleset repo
         run: |
           git clone --filter=blob:none --sparse --branch "${{ steps.cfg.outputs.ref }}"\
              "${{ steps.cfg.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ steps.cfg.outputs.entry }} )
 
-      # Step 5: Run pre-check script to validate GDS top cell and die area
+      # Run precheck to validate GDS top cell and die area.
       - name: Run python script
         run: |
           python3 script/pre_check.py --top ${{ steps.cfg.outputs.cell }} src/${{ steps.cfg.outputs.gds }}
 
-  # Main DRC job, depends on Precheck outputs.
+  # DRC job (depends on Precheck outputs).
   DRC:
     runs-on: ubuntu-latest
-    # Ensure Precheck completes and make its outputs available.
+    # Ensure Precheck completes and its outputs are available.
     needs: Precheck
     steps:
-      # Step 1: Clone the repository to get the project files
+      # Checkout repository.
       - uses: actions/checkout@v4
-      # Step 2: Install required dependencies and tools
+      # Install KLayout and dependencies.
       - name: Install KLayout + deps
         run: |
           sudo apt-get update
           sudo apt-get install -y klayout git
           klayout -v
 
-      # Step 3: Clone the DRC ruleset repository (sparse checkout)
-      - name: Checkout libs.tech from ruleset repo 
+      # Fetch ruleset (sparse checkout).
+      - name: Checkout libs.tech from ruleset repo
         run: |
           git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.outputs.ref }}"\
              "${{ needs.Precheck.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.outputs.entry }} )
 
-      # Step 4: Run DRC in batch mode with parameters
+      # Run DRC in batch mode.
       - name: Run DRC (headless)
         run: |
           klayout -b -r TR-1um/libs.tech/klayout/drc/run.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
-            -rd report=log/${{ needs.Precheck.outputs.report }}
+            -rd report=${{ needs.Precheck.outputs.report }}
 
-      # Step 6: Upload DRC results as GitHub Actions artifact
+      # Upload DRC report (if generated).
       - uses: actions/upload-artifact@v4
         with:
-          name: drc-report
-          path: log/${{ needs.Precheck.outputs.report }}
+          name: DRC_report
+          if-no-files-found: error
+          path: src/${{ needs.Precheck.outputs.report }}
 
-  # Main MDP job, depends on Precheck outputs.
+      # Run LVS in batch mode.
+      - name: Run LVS (headless)
+        run: |
+          klayout -b -r TR-1um/libs.tech/klayout/lvs/run.lvs \
+            -rd input=src/${{ needs.Precheck.outputs.gds }} \
+            -rd top_cell=${{ needs.Precheck.outputs.cell }} \
+            -rd circuit=${{ needs.Precheck.outputs.circuit }}
+
+  # MDP job (depends on Precheck and DRC).
   MDP:
     runs-on: ubuntu-latest
-    # Ensure Precheck completes and make its outputs available.
+    # Ensure upstream jobs complete and outputs are available.
     needs: [Precheck, DRC]
     steps:
-      # Step 1: Clone the repository to get the project files
+      # Checkout repository.
       - uses: actions/checkout@v4
-      # Step 2: Install required dependencies and tools
+      # Install KLayout and dependencies.
       - name: Install KLayout + deps
         run: |
           sudo apt-get update
           sudo apt-get install -y klayout git
           klayout -v
 
-      # Step 3: Clone the DRC ruleset repository (sparse checkout)
-      - name: Checkout libs.tech from ruleset repo 
+      # Fetch ruleset (sparse checkout).
+      - name: Checkout libs.tech from ruleset repo
         run: |
           git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.outputs.ref }}"\
              "${{ needs.Precheck.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.outputs.entry }} )
 
-      # Step 4: Run DRC in batch mode with parameters
+      # Run MDP in batch mode.
       - name: Run MDP (headless)
         run: |
-          mkdir -p run
+          mkdir -p mdp
           klayout -b -r TR-1um/libs.tech/klayout/drc/run_mdp.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
-            -rd output=run/${{ needs.Precheck.outputs.output }}
+            -rd output=mdp/${{ needs.Precheck.outputs.output }}
 
-      # Step 6: Upload DRC results as GitHub Actions artifact
+      # Run IP62 DRC on the generated MDP output.
+      - name: Run IP62 DRC (headless)
+        run: |
+          klayout -b -r TR-1um/libs.tech/klayout/drc/run_IP62.drc \
+            -rd input=mdp/${{ needs.Precheck.outputs.output }} \
+            -rd top_cell=${{ needs.Precheck.outputs.cell }} \
+            -rd report=${{ needs.Precheck.outputs.report }}
+
+      # Upload IP62 DRC report if generated.
       - uses: actions/upload-artifact@v4
         with:
-          name: IP62_GDSII
-          path: run/${{ needs.Precheck.outputs.output }}
+          name: DRC_report_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.report }}
+
+      # Upload IP62 GDSII report if no report was generated.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GDSII_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.output }}

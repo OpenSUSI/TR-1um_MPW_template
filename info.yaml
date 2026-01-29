@@ -1,5 +1,5 @@
 # ----- ------ ----- ----- ------ ----- ----- ------ ----- 
-# Original version was made by jun1okamura 
+# OpenSUSI jun1okamura <jun1okamura@gmail.com>  
 # LICENSE: Apache License Version 2.0, January 2004,
 #          http://www.apache.org/licenses/
 # ----- ------ ----- ----- ------ ----- ----- ------ ----- 
@@ -11,13 +11,14 @@ project:
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  ""      # One line description of what your project does
 
-# Your top module name must start with "tr-1um_". Make it unique by including your github username:
+# Your top module name must start with "tr_1um_". Make it unique by including your github username:
 gds:
-  file:     "tr-1um_example.gds"
-  top_cell: "TOP"
+  file:     "tr_1um_example.gds"
+  top_cell: "tr_1um_example"
 #
-cir:
-  file:     "tr-1um_example.cir"
+# Your LVS circuit file must start with "tr_1um_". Make it unique by including your github username:
+lvs:
+  file:     "tr_1um_example.cir"
 #
 # Your MDP file start with "IP62_". Make it unique by including your github username:
 mdp:
@@ -27,7 +28,7 @@ mdp:
 # DRC ruleset repository information
 drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
-  ref:    "Action3D"    # Branch or tag name
+  ref:    "main"    # Branch or tag name
   entry:  "libs.tech"
   report: "report.lyrdb"
 

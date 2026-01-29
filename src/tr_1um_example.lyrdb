@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+ <description>TR-1um DRC(Drawing)</description>
+ <original-file/>
+ <generator>drc: script='../../TR-1um/libs.tech/klayout/drc/run.drc'</generator>
+ <top-cell>tr_1um_example</top-cell>
+ <tags>
+ </tags>
+ <categories>
+  <category>
+   <name>ERR00: WN on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: AP on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: AN on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: AR on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: AC on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: GC on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: GR on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: CO on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: M1 on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: V1 on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: M2 on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR00: PO on Prohibted area</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR01: OFFGRID 0.050</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR02: twisted polygon</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ERR03: NOT Diagonal</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.Z1:AP+AC not in WN(R)</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.Z2:AP+AR not in WN(C)</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.Z1:CO not on AA+GC+GR</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.Z3:CO not on M1</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.Z1:V1 not on M1</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.Z2:V1 not on M2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.Z1:PO not on M1</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.Z2:PO not on M2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.Z3:V1(P) not_covering PO</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.W1:WN Wmin &lt;  8.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S1:WN Smin &lt; 12.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S2:WN-WN(R) Smin &lt;  9.5</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S3:WN-WN(C) Smin &lt; 12.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S4:WN(R)-WN(C) Smin &lt;  9.5</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S5:WN(R) Smin &lt;  8.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.S6:WN(C) Smin &lt; 12.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.AP:WN-AP Smin &lt;  5.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>WN.AN:WN-AN Smin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.S1:AR Smin &lt;  4.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.WR:AR-WN(R) Emin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.WR:AN-WN(R) Emin &lt;  5.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.AN:AR-AN Smin &lt;  4.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AC.W1:AC Wmin &lt;  28.5</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AC.W1:AC Wmax &gt; 120.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.WC:AN-WN(C) Emin &lt;  3.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AC.AN:AC-AN Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AC.GC:AC-GC Emin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AC.R1:AC must surrounded AN(C)</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.W1:AP Wmin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.S1:AP Smin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.AN:AP-AN Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.WM:PMOS Wmin &lt;   3.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.WM:PMOS Wmax &gt;  60.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.LM:PMOS Lmin &lt;   1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.LM:PMOS Lmax &gt;  30.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AP.WN:AP-WN Emin &lt;  7.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DP.W1:DP Wmin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DP.AP:DP-AP Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DP.AN:DP-AN Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.W1:AN Wmin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.S1:AN Smin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.AP:AN-AP Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.WM:NMOS Wmin &lt;   3.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.WM:NMOS Wmax &gt;  60.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.LM:NMOS Lmin &lt;   1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.LM:NMOS Lmax &gt;  30.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AN.WN:AN-WN(M) Emin &lt;  5.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DN.W1:DN Wmin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DN.AP:DN-AP Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>DN.AN:DN-AN Smin &lt;  2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.W1:GC Wmin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.S1:GC Smin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.AP:GC-AP Smin &lt;  0.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.AN:GC-AN Smin &lt;  0.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.EP:PMOS Endcap &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.EN:NMOS Endcap &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.W1:CO Wmin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.S1:CO Smin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.WD:CO(D) Wfix &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.AD:CO(D)-AP+AN Emin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.AP:CO-AP Emin &lt;  0.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.AN:CO-AN Emin &lt;  0.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.GG:CO-GC(G) Smin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CO.GC:CO-GC+GR Emin &lt;  0.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.W1:RR Wmin &lt;   2.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.W1:RR Wmax &gt;  20.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.L1:RR Lmin &lt;  13.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.L1:RR Lmax &gt; 100.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.GC:GC-AR Smin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.PW:GC(R) Wmin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.XY:AR shape NOT Octagon</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AR.XY:AR trimed corner size &lt; 0.50</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.R1:AR must surrounded GC(R)</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.R2:GC(R) must tie down to WN(R)</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GR.W1:RS Wmin &lt;   4.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GR.W1:RS Wmax &gt;  20.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GR.L1:RS Lmin &lt;  20.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GR.L1:RS Lmax &gt; 100.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GR.S1:RS Smin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CR.W1:CO(RR) Wmin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CR.AT:CO(RR)-AR(T) Emin &lt;  1.5</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CR.AS:CO(RR)-AR(S) Emin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CC.W1:CO(C) Wmin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CC.S1:CO(C) Smin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CC.AC:CO(C)-AC Emin &lt;  2.9</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CC.AN:CO(C)-AN Emin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.W1:M1 Wmin &lt;  1.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.S1:M1 Smin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.SC:M1(C) Smin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.CO:M1-CO(S) Fmin &lt;  0.8</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.CC:M1-CO(C) Fmin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.CL:M1-CO(L) Fmin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.SW:M1(W) Smin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.W1:V1 Wfix &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.S1:V1 Smin &lt;  1.5</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.M1:V1-M1 Emin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.GC:V1-GC Smin &lt;  1.2</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.CO:V1-CO Smin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.CL:V1-CO(L) Smin &lt;  1.4</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.W1:M2 Wmin &lt;  3.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.S1:M2 Smin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.V1:M2-V1 Fmin &lt;  1.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.WM:PMOSE Wmin &lt;  11.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.WM:PMOSE Wmax &gt;  60.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.LM:PMOSE Lmin &lt;   2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.LM:PMOSE Lmax &gt;  30.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.AN:APE-AN Smin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.XY:APE shape NOT Octagon</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.XY:APE trimed corner size &lt; 0.98</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>APE.CO:APE-CO Smin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.WM:NMOSE Wmin &lt;  11.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.WM:NMOSE Wmax &gt;  60.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.LM:NMOSE Lmin &lt;   2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.LM:NMOSE Lmax &gt;  30.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.AP:ANE-AP Smin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.XY:ANE shape NOT Octagon</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.XY:ANE trimed corner size &lt; 0.98</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>ANE.CO:ANE-CO Smin &lt;  2.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>COE.W1:CO(E) Wfix &lt;  3.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>COE.S1:CO(E) Smin &lt;  1.6</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CDE.GC:CD(E)-GC Smin &lt;  7.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CSE.GC:CS(E)-GC Smin &lt;  3.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>COE.AP:CO(E)-AP Emin &lt;  4.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>COE.AN:CO(E)-AN Emin &lt;  4.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.W1:PO Wmin &lt; 70.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.S1:PO Smin &lt; 64.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.PO:M2(P)-PO Fmin &lt;  5.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.PO:M1(P)-PO Fmin &lt;  5.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.V1:PO-V1(P) Emin &lt; 10.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.AP:PO-AP Smin &lt; 14.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.AN:PO-AN Smin &lt; 14.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.GC:PO-GC Smin &lt; 14.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.M1:PO-M1 Smin &lt; 14.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>PO.M2:PO-M2 Smin &lt; 14.0</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GC.ANT:GC must electrically connect to Substrate</name>
+   <description/>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>tr_1um_example</name>
+   <variant/>
+   <layout-name/>
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+ </items>
+</report-database>

@@ -108,28 +108,22 @@ jobs:
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd report=${{ needs.Precheck.outputs.report }}
 
-      - name: Decide pass/fail by report (XML)
-        run: |
-          set -euo pipefail
-
-          if [ ! -f "src/${{ needs.Precheck.outputs.report }}" ]; then
-            echo "ERROR: report xml not generated: src/${{ needs.Precheck.outputs.report }}"
-            exit 4
-          fi
-
-          if grep -q "<item" "src/${{ needs.Precheck.outputs.report }}"; then
-            echo "DRC VIOLATIONS FOUND -> FAIL"
-            echo "---- first 50 lines of report ----"
-            head -n 50 "src/${{ needs.Precheck.outputs.report }}" || true
-            exit 1
-          fi
-
       # Upload DRC report (if generated).
       - uses: actions/upload-artifact@v4
         with:
           name: DRC_report
           if-no-files-found: error
           path: src/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<item" "src/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "src/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
 
       # Run LVS in batch mode.
       - name: Run LVS (headless)
@@ -183,24 +177,22 @@ jobs:
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd report=${{ needs.Precheck.outputs.report }}
 
-          if [ ! -f "mdp/${{ needs.Precheck.outputs.report }}" ]; then
-            echo "ERROR: report xml not generated: mdp/${{ needs.Precheck.outputs.report }}"
-            exit 4
-          fi
-
-          if grep -q "<item" "mdp/${{ needs.Precheck.outputs.report }}"; then
-            echo "DRC VIOLATIONS FOUND -> FAIL"
-            echo "---- first 50 lines of report ----"
-            head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
-            exit 1
-          fi
-
       # Upload IP62 DRC report if generated.
       - uses: actions/upload-artifact@v4
         with:
           name: DRC_report_MDP
           if-no-files-found: error
           path: mdp/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<item" "mdp/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
 
       # Upload IP62 GDSII report if no report was generated.
       - uses: actions/upload-artifact@v4

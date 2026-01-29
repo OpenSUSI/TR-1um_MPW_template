@@ -155,12 +155,6 @@ jobs:
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd output=mdp/${{ needs.Precheck.outputs.output }}
 
-      # Upload MDP output.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: IP62_GDSII
-          path: mdp/${{ needs.Precheck.outputs.output }}
-
       # Run IP62 DRC on the generated MDP output.
       - name: Run IP62 DRC (headless)
         run: |

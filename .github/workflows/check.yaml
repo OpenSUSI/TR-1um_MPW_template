@@ -106,15 +106,14 @@ jobs:
           klayout -b -r TR-1um/libs.tech/klayout/drc/run.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
-            -rd report=log/${{ needs.Precheck.outputs.report }}
+            -rd report=${{ needs.Precheck.outputs.report }}
 
       # Upload DRC report (if generated).
       - uses: actions/upload-artifact@v4
-        if: ${{ hashFiles(format('log/{0}', needs.Precheck.outputs.report)) != '' }}
         with:
           name: drc-report
-          if-no-files-found: none
-          path: log/${{ needs.Precheck.outputs.report }}
+          if-no-files-found: error
+          path: ${{ needs.Precheck.outputs.report }}
 
       # Run LVS in batch mode.
       - name: Run LVS (headless)
@@ -161,19 +160,18 @@ jobs:
           klayout -b -r TR-1um/libs.tech/klayout/drc/run_IP62.drc \
             -rd input=mdp/${{ needs.Precheck.outputs.output }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
-            -rd report=mdp/${{ needs.Precheck.outputs.report }}
+            -rd report=${{ needs.Precheck.outputs.report }}
 
       # Upload IP62 DRC report if generated.
       - uses: actions/upload-artifact@v4
-        if: ${{ hashFiles(format('mdp/{0}', needs.Precheck.outputs.report)) != '' }}
         with:
           name: IP62_DRC
-          if-no-files-found: none
-          path: mdp/${{ needs.Precheck.outputs.report }}
+          if-no-files-found: error
+          path: ${{ needs.Precheck.outputs.report }}
 
       # Upload IP62 GDSII report if no report was generated.
       - uses: actions/upload-artifact@v4
-        if: ${{ hashFiles(format('mdp/{0}', needs.Precheck.outputs.report)) == '' }}
         with:
           name: IP62_GDSII
+          if-no-files-found: error
           path: mdp/${{ needs.Precheck.outputs.output }}

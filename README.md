@@ -32,11 +32,7 @@ The DRC stage performs:
 
 - DRC also check the top cell must preserve open space for corner-reserved areas.
 
-**DRC**
-
-The DRC stage performs:
-
-- KLayout LVS(Drawing) checks.
+- KLayout LVS(Drawing) check.
 
 ![OpenSUSI MPW](docs/OpenSUSI-MPW_SUBMIT.png)
 

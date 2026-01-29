@@ -28,7 +28,7 @@ mdp:
 # DRC ruleset repository information
 drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
-  ref:    "main"    # Branch or tag name
+  ref:    "main"        # Branch or tag name
   entry:  "libs.tech"
   report: "report.lyrdb"
 

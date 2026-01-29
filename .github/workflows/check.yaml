@@ -113,7 +113,7 @@ jobs:
         with:
           name: drc-report
           if-no-files-found: error
-          path: ${{ needs.Precheck.outputs.report }}
+          path: src/${{ needs.Precheck.outputs.report }}
 
       # Run LVS in batch mode.
       - name: Run LVS (headless)
@@ -167,7 +167,7 @@ jobs:
         with:
           name: IP62_DRC
           if-no-files-found: error
-          path: ${{ needs.Precheck.outputs.report }}
+          path: mdp/${{ needs.Precheck.outputs.report }}
 
       # Upload IP62 GDSII report if no report was generated.
       - uses: actions/upload-artifact@v4

@@ -100,7 +100,9 @@ jobs:
           git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.outputs.ref }}"\
              "${{ needs.Precheck.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.outputs.entry }} )
-
+          ln -s TR-1um/libs.tech/klayout .klayout
+          ls -al
+          
       # Run DRC in batch mode.
       - name: Run DRC (headless)
         run: |
@@ -162,6 +164,7 @@ jobs:
       - name: Run MDP (headless)
         run: |
           mkdir -p mdp
+          ln -s TR-1um/libs.tech/klayout .klayout
           klayout -b -r TR-1um/libs.tech/klayout/drc/run_mdp.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \

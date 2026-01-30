@@ -86,11 +86,12 @@ jobs:
     steps:
       # Checkout repository.
       - uses: actions/checkout@v4
-      # Install KLayout and dependencies.
-      - name: Install KLayout + deps
+      - name: Install KLayout
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y klayout git
+          wget https://github.com/TinyTapeout/klayout/releases/download/v0.29.12/klayout_0.29.12-1_amd64.deb
+          sudo apt-get update && sudo apt-get install -y ./klayout_0.29.12-1_amd64.deb
+          pip install klayout==0.29.12
           klayout -v
 
       # Fetch ruleset (sparse checkout).
@@ -99,7 +100,7 @@ jobs:
           git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.outputs.ref }}"\
              "${{ needs.Precheck.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.outputs.entry }} )
-
+          
       # Run DRC in batch mode.
       - name: Run DRC (headless)
         run: |
@@ -114,6 +115,16 @@ jobs:
           name: DRC_report
           if-no-files-found: error
           path: src/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<visited>false</visited>" "src/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "src/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
 
       # Run LVS in batch mode.
       - name: Run LVS (headless)
@@ -132,10 +143,12 @@ jobs:
       # Checkout repository.
       - uses: actions/checkout@v4
       # Install KLayout and dependencies.
-      - name: Install KLayout + deps
+      - name: Install KLayout
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y klayout git
+          wget https://github.com/TinyTapeout/klayout/releases/download/v0.29.12/klayout_0.29.12-1_amd64.deb
+          sudo apt-get update && sudo apt-get install -y ./klayout_0.29.12-1_amd64.deb
+          pip install klayout==0.29.12
           klayout -v
 
       # Fetch ruleset (sparse checkout).
@@ -154,6 +167,14 @@ jobs:
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd output=mdp/${{ needs.Precheck.outputs.output }}
 
+      - name: Check that MDP output file was generated
+        run: |
+          set -euo pipefail           
+          if [ ! -f "mdp/${{ needs.Precheck.outputs.output }}" ]; then
+            echo "ERROR: MDP output not generated: mdp/${{ needs.Precheck.outputs.output }}"
+            exit 4
+          fi
+
       # Run IP62 DRC on the generated MDP output.
       - name: Run IP62 DRC (headless)
         run: |
@@ -168,6 +189,16 @@ jobs:
           name: DRC_report_MDP
           if-no-files-found: error
           path: mdp/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<visited>false</visited>" "mdp/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
 
       # Upload IP62 GDSII report if no report was generated.
       - uses: actions/upload-artifact@v4

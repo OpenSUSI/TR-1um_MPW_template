@@ -175,7 +175,7 @@ jobs:
       # Upload IP62 DRC report if generated.
       - uses: actions/upload-artifact@v4
         with:
-          name: DRC_report_MDP
+          name: DRC_file
           if-no-files-found: error
           path: TR-1um/libs.tech/klayout/drc/run_mdp.drc 
 

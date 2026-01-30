@@ -86,11 +86,12 @@ jobs:
     steps:
       # Checkout repository.
       - uses: actions/checkout@v4
-      # Install KLayout and dependencies.
-      - name: Install KLayout + deps
+      - name: Install KLayout
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y klayout git
+          wget https://github.com/TinyTapeout/klayout/releases/download/v0.29.12/klayout_0.29.12-1_amd64.deb
+          sudo apt-get update && sudo apt-get install -y ./klayout_0.29.12-1_amd64.deb
+          pip install klayout==0.29.12
           klayout -v
 
       # Fetch ruleset (sparse checkout).
@@ -142,10 +143,12 @@ jobs:
       # Checkout repository.
       - uses: actions/checkout@v4
       # Install KLayout and dependencies.
-      - name: Install KLayout + deps
+      - name: Install KLayout
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y klayout git
+          wget https://github.com/TinyTapeout/klayout/releases/download/v0.29.12/klayout_0.29.12-1_amd64.deb
+          sudo apt-get update && sudo apt-get install -y ./klayout_0.29.12-1_amd64.deb
+          pip install klayout==0.29.12
           klayout -v
 
       # Fetch ruleset (sparse checkout).

@@ -100,8 +100,6 @@ jobs:
           git clone --filter=blob:none --sparse --branch "${{ needs.Precheck.outputs.ref }}"\
              "${{ needs.Precheck.outputs.repo }}" TR-1um
           ( cd TR-1um ; git sparse-checkout add ${{ needs.Precheck.outputs.entry }} )
-          ln -s TR-1um/libs.tech/klayout .klayout
-          ls -al
           
       # Run DRC in batch mode.
       - name: Run DRC (headless)
@@ -164,24 +162,10 @@ jobs:
       - name: Run MDP (headless)
         run: |
           mkdir -p mdp
-          ln -s TR-1um/libs.tech/klayout .klayout
           klayout -b -r TR-1um/libs.tech/klayout/drc/run_mdp.drc \
             -rd input=src/${{ needs.Precheck.outputs.gds }} \
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd output=mdp/${{ needs.Precheck.outputs.output }}
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: GDSII_TR
-          if-no-files-found: error
-          path: src/${{ needs.Precheck.outputs.gds }} 
-
-      # Upload IP62 GDSII report if no report was generated.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: GDSII_MDP
-          if-no-files-found: error
-          path: mdp/${{ needs.Precheck.outputs.output }}
 
       - name: Check that MDP output file was generated
         run: |
@@ -190,13 +174,6 @@ jobs:
             echo "ERROR: MDP output not generated: mdp/${{ needs.Precheck.outputs.output }}"
             exit 4
           fi
-
-      # Upload IP62 DRC report if generated.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: DRC_file
-          if-no-files-found: error
-          path: TR-1um/libs.tech/klayout/drc/run_mdp.drc 
 
       # Run IP62 DRC on the generated MDP output.
       - name: Run IP62 DRC (headless)
@@ -222,3 +199,10 @@ jobs:
             head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
             exit 1
           fi
+
+      # Upload IP62 GDSII report if no report was generated.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GDSII_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.output }}

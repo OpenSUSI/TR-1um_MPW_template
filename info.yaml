@@ -29,7 +29,7 @@ mdp:
 drc:
   repo:   "https://github.com/OpenSUSI/TR-1um.git"
   ref:    "develop_klayout"        # Branch or tag name
-  entry:  "libs.tech"
+  entry:  "main"
   report: "report.lyrdb"
 
 yaml_version: 6

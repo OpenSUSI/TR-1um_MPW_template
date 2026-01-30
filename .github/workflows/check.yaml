@@ -167,8 +167,18 @@ jobs:
             -rd top_cell=${{ needs.Precheck.outputs.cell }} \
             -rd output=mdp/${{ needs.Precheck.outputs.output }}
 
+      # Upload IP62 GDSII report if no report was generated.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GDSII_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.output }}
+
+      - name: Check that MDP output file was generated
+        run: |
+          set -euo pipefail           
           if [ ! -f "mdp/${{ needs.Precheck.outputs.output }}" ]; then
-            echo "ERROR: report xml not generated: mdp/${{ needs.Precheck.outputs.output }}"
+            echo "ERROR: MDP output not generated: mdp/${{ needs.Precheck.outputs.output }}"
             exit 4
           fi
 
@@ -203,10 +213,3 @@ jobs:
             head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
             exit 1
           fi
-
-      # Upload IP62 GDSII report if no report was generated.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: GDSII_MDP
-          if-no-files-found: error
-          path: mdp/${{ needs.Precheck.outputs.output }}

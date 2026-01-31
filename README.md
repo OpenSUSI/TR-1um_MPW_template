@@ -10,11 +10,11 @@ The GitHub CI/CD actions will perform the following steps.
 
 The pre-check validates that:
 
-- The top cell name matches the entry in info.yaml (top_cell:).
+- The top cell name matches the entry in info.yaml (gds.top_cell).
 
-- The top cell must be unique (not plural).
+- The top cell name should be unique.
 
-- The top cell database unit (dbu) must be 0.001um
+- The top cell database unit (dbu) must be 0.001um.
 
 - The top cell drawing area fits within the range (-1250, -1250) to (1250, 1250).
 
@@ -30,9 +30,15 @@ The DRC stage performs:
 
 - KLayout DRC(Drawing) checks and Antenna checks.
 
-- DRC also check the top cell must preserve open space for corner-reserved areas.
+- Verifies the top cell preserves open space for corner-reserved areas.
 
-- KLayout LVS(Drawing) check.
+**LVS**
+
+The LVS stage performs:
+
+- KLayout LVS with the provided circuit netlist.
+
+- Uploads the extracted netlist for review.
 
 ![OpenSUSI MPW](docs/OpenSUSI-MPW_SUBMIT.png)
 
@@ -40,9 +46,9 @@ The DRC stage performs:
 
 The MDP stage performs the following:
 
-- Using KLayout’s DRC functionality, it generates the IP62 MASK and DLXXX layer GDSII for final tape-out from the TR-1um Drawing Layers.
+- Generates the IP62 MASK and DLXXX layer GDSII from the TR-1um drawing layers.
 
 - The resulting IP62 GDSII can be downloaded for reference and further verification.
 
-- KLayout DRC(MASK) checks and Antenna checks.
+- Runs KLayout DRC(MASK) checks and antenna checks on the generated MDP output.
 

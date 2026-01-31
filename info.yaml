@@ -21,7 +21,7 @@ gds:
 # LVS comparison is optional, you can switch off it by put netlist_only: "true".
 lvs:
   extension:    "cir"
-  netlist_only: "true"
+  netlist_only: "false"
 #
 # Your MDP file start with "IP62_". Make it unique by including your github username:
 mdp:

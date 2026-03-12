@@ -1,6 +1,10 @@
 # Design-rule workflow
 # Runs KLayout-based DRC/LVS/MDP checks to validate the submitted layout
 # against the foundry technology rules.
+runs:
+  using: 'node24'
+  main: 'main.js'
+
 name: check
 
 # Workflow triggers.

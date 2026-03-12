@@ -3,15 +3,16 @@
 # against the foundry technology rules.
 name: check
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 # Workflow triggers.
 on:
   # Run on push.
   push:
   # Allow manual runs from the Actions UI.
   workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
+  # ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true
 
 jobs:
   # Precheck: parse config and run validation.

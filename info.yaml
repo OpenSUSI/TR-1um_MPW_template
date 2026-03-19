@@ -16,7 +16,7 @@ project:
 gds:
   top_cell:     "tr_1um_username"
   extension:    "gds"
-#
+# TEST
 # LVS compare filename must be top_cell + "." + extension and placed in src/ directory.
 # LVS comparison is optional, you can switch off it by put netlist_only: "true".
 lvs:

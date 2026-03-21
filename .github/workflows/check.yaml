@@ -1,6 +1,10 @@
 # Design-rule workflow
 # Runs KLayout-based DRC/LVS/MDP checks to validate the submitted layout
-# against the foundry technology rules.
+# ----- ------ ----- ----- ------ ----- ----- ------ ----- 
+# OpenSUSI jun1okamura <jun1okamura@gmail.com>  
+# LICENSE: Apache License Version 2.0, January 2004,
+#          http://www.apache.org/licenses/
+# ----- ------ ----- ----- ------ ----- ----- ------ ----- 
 name: check
 
 # Workflow triggers.

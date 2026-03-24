@@ -1,0 +1,52 @@
+name: Checkout PDK
+description: Sparse checkout of required PDK ruleset directory
+
+inputs:
+  pdk_repo:
+    description: Git repository URL of the PDK
+    required: true
+  pdk_ref:
+    description: Branch, tag, or ref to checkout
+    required: true
+  pdk_dir:
+    description: Directory inside the PDK repo to sparse checkout
+    required: true
+  checkout_dir:
+    description: Local checkout directory
+    required: false
+    default: "TR-1um"
+
+runs:
+  using: composite
+  steps:
+    - name: Remove previous checkout
+      shell: bash
+      run: |
+        set -euo pipefail
+        rm -rf "${{ inputs.checkout_dir }}"
+
+    - name: Sparse checkout PDK
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        REPO="${{ inputs.pdk_repo }}"
+        REF="${{ inputs.pdk_ref }}"
+        DIR="${{ inputs.pdk_dir }}"
+        OUT="${{ inputs.checkout_dir }}"
+
+        git clone --filter=blob:none --sparse --branch "${REF}" "${REPO}" "${OUT}"
+        (
+          cd "${OUT}"
+          git sparse-checkout add "${DIR}"
+        )
+
+    - name: Show checkout result
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "PDK repo : ${{ inputs.pdk_repo }}"
+        echo "PDK ref  : ${{ inputs.pdk_ref }}"
+        echo "PDK dir  : ${{ inputs.pdk_dir }}"
+        echo "Local dir: ${{ inputs.checkout_dir }}"
+        ls -la "${{ inputs.checkout_dir }}"

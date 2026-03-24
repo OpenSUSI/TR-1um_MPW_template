@@ -1,0 +1,233 @@
+# Design-rule workflow
+# Runs KLayout-based DRC/LVS/MDP checks to validate the submitted layout
+# ----- ------ ----- ----- ------ ----- ----- ------ -----
+# OpenSUSI jun1okamura <jun1okamura@gmail.com>
+# LICENSE: Apache License Version 2.0, January 2004
+#          http://www.apache.org/licenses/
+# ----- ------ ----- ----- ------ ----- ----- ------ -----
+name: check
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  KLAYOUT_VERSION: "0.29.12"
+
+jobs:
+  Precheck:
+    runs-on: ubuntu-latest
+    outputs:
+      top_cell: ${{ steps.cfg.outputs.top_cell }}
+      layout: ${{ steps.cfg.outputs.layout }}
+      circuit: ${{ steps.cfg.outputs.circuit }}
+      report: ${{ steps.cfg.outputs.report }}
+      extracted: ${{ steps.cfg.outputs.extracted }}
+      mdp_file: ${{ steps.cfg.outputs.mdp_file }}
+      lvs_flag: ${{ steps.cfg.outputs.lvs_flag }}
+      pdk_repo: ${{ steps.cfg.outputs.pdk_repo }}
+      pdk_ref: ${{ steps.cfg.outputs.pdk_ref }}
+      pdk_dir: ${{ steps.cfg.outputs.pdk_dir }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup KLayout
+        uses: ./.github/actions/setup-klayout
+        with:
+          klayout_version: ${{ env.KLAYOUT_VERSION }}
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --user pyyaml click
+
+      - name: Read info.yaml
+        id: cfg
+        run: |
+          python3 scripts/read_info.py --info info.yaml
+
+      - name: Checkout PDK ruleset
+        uses: ./.github/actions/checkout-pdk
+        with:
+          pdk_repo: ${{ steps.cfg.outputs.pdk_repo }}
+          pdk_ref: ${{ steps.cfg.outputs.pdk_ref }}
+          pdk_dir: ${{ steps.cfg.outputs.pdk_dir }}
+          checkout_dir: TR-1um
+
+      - name: Run pre_check.py
+        run: |
+          python3 scripts/pre_check.py \
+            --top "${{ steps.cfg.outputs.top_cell }}" \
+            "src/${{ steps.cfg.outputs.layout }}"
+
+  DRC:
+    runs-on: ubuntu-latest
+    needs: Precheck
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup KLayout
+        uses: ./.github/actions/setup-klayout
+        with:
+          klayout_version: ${{ env.KLAYOUT_VERSION }}
+
+      - name: Checkout PDK ruleset
+        uses: ./.github/actions/checkout-pdk
+        with:
+          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
+          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
+          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
+          checkout_dir: TR-1um
+
+      - name: Run DRC (headless)
+        run: |
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run.drc" \
+            -rd input="src/${{ needs.Precheck.outputs.layout }}" \
+            -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
+            -rd report="${{ needs.Precheck.outputs.report }}"
+
+      - name: Upload DRC report
+        uses: actions/upload-artifact@v4
+        with:
+          name: DRC_report
+          if-no-files-found: error
+          path: src/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<visited>false</visited>" "src/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "src/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
+
+  LVS:
+    runs-on: ubuntu-latest
+    needs: [Precheck, DRC]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup KLayout
+        uses: ./.github/actions/setup-klayout
+        with:
+          klayout_version: ${{ env.KLAYOUT_VERSION }}
+
+      - name: Checkout PDK ruleset
+        uses: ./.github/actions/checkout-pdk
+        with:
+          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
+          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
+          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
+          checkout_dir: TR-1um
+
+      - name: Run LVS (headless)
+        run: |
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/lvs/run.lvs" \
+            -rd input="src/${{ needs.Precheck.outputs.layout }}" \
+            -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
+            -rd circuit="${{ needs.Precheck.outputs.circuit }}" \
+            -rd extracted="${{ needs.Precheck.outputs.extracted }}" \
+            -rd netlist_only="${{ needs.Precheck.outputs.lvs_flag }}"
+
+      - name: Upload extracted netlist
+        uses: actions/upload-artifact@v4
+        with:
+          name: Extracted
+          if-no-files-found: error
+          path: src/${{ needs.Precheck.outputs.extracted }}
+
+  MDP:
+    runs-on: ubuntu-latest
+    needs: [Precheck, DRC, LVS]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup KLayout
+        uses: ./.github/actions/setup-klayout
+        with:
+          klayout_version: ${{ env.KLAYOUT_VERSION }}
+
+      - name: Checkout PDK ruleset
+        uses: ./.github/actions/checkout-pdk
+        with:
+          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
+          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
+          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
+          checkout_dir: TR-1um
+
+      - name: Run MDP (headless)
+        run: |
+          mkdir -p mdp
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run_mdp.drc" \
+            -rd input="src/${{ needs.Precheck.outputs.layout }}" \
+            -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
+            -rd output="mdp/${{ needs.Precheck.outputs.mdp_file }}"
+
+      - name: Check that MDP output file was generated
+        run: |
+          set -euo pipefail
+          if [ ! -f "mdp/${{ needs.Precheck.outputs.mdp_file }}" ]; then
+            echo "ERROR: MDP output not generated: mdp/${{ needs.Precheck.outputs.mdp_file }}"
+            exit 4
+          fi
+
+      - name: Run IP62 DRC (headless)
+        run: |
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run_IP62.drc" \
+            -rd input="mdp/${{ needs.Precheck.outputs.mdp_file }}" \
+            -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
+            -rd report="${{ needs.Precheck.outputs.report }}"
+
+      - name: Upload IP62 DRC report
+        uses: actions/upload-artifact@v4
+        with:
+          name: DRC_report_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.report }}
+
+      - name: Decide pass/fail by report (XML)
+        run: |
+          set -euo pipefail
+          if grep -q "<visited>false</visited>" "mdp/${{ needs.Precheck.outputs.report }}"; then
+            echo "DRC VIOLATIONS FOUND -> FAIL"
+            echo "---- first 50 lines of report ----"
+            head -n 50 "mdp/${{ needs.Precheck.outputs.report }}" || true
+            exit 1
+          fi
+
+      - name: Upload MDP GDSII artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GDSII_MDP
+          if-no-files-found: error
+          path: mdp/${{ needs.Precheck.outputs.mdp_file }}

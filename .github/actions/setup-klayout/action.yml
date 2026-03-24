@@ -1,0 +1,49 @@
+name: Setup KLayout
+description: Install pinned KLayout and matching Python package
+
+inputs:
+  klayout_version:
+    description: KLayout version to install
+    required: false
+    default: "0.29.12"
+
+runs:
+  using: composite
+  steps:
+    - name: Install system packages
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo apt-get update
+        sudo apt-get install -y wget python3-pip
+
+    - name: Install KLayout .deb
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        VERSION="${{ inputs.klayout_version }}"
+        DEB="klayout_${VERSION}-1_amd64.deb"
+        URL="https://github.com/TinyTapeout/klayout/releases/download/v${VERSION}/${DEB}"
+
+        wget -q "${URL}" -O "${DEB}"
+        sudo apt-get install -y "./${DEB}"
+
+    - name: Install Python klayout package
+      shell: bash
+      run: |
+        set -euo pipefail
+        VERSION="${{ inputs.klayout_version }}"
+        python3 -m pip install "klayout==${VERSION}"
+
+    - name: Show versions
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "System klayout:"
+        klayout -v
+        echo "Python klayout:"
+        python3 - <<'PY'
+        import klayout.db as pya
+        print("python-klayout OK")
+        PY

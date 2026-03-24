@@ -1,6 +1,9 @@
 # TR-1um MPW Template
 
-![check](../../actions/workflows/check.yml/badge.svg)
+# TR-1um MPW Template
+
+[![check](https://github.com/OpenSUSI/TR-1um_MPW_template/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/OpenSUSI/TR-1um_MPW_template/actions/workflows/check.yml)
+
 
 - [Full documentation](docs/info.md)
 
@@ -28,6 +31,8 @@ Place your design files in the `src/` directory:
 
 ⚠️ The file name must match `gds.top_cell` in `info.yaml`.
 
+![Frame](docs/OpenSUSI-MPW.png)
+
 ---
 
 ## Configuration (info.yaml)
@@ -52,6 +57,8 @@ See [docs/info.md](docs/info.md) for full details.
 ## CI Workflow
 
 The GitHub Actions pipeline automatically validates your design.
+
+![Floow](docs/OpenSUSI-MPW_SUBMIT.png)
 
 ---
 

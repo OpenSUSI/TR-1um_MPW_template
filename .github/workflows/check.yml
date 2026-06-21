@@ -95,7 +95,7 @@ jobs:
 
       - name: Run DRC (headless)
         run: |
-          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run.drc" \
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/tech/drc/run.drc" \
             -rd input="src/${{ needs.Precheck.outputs.layout }}" \
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd report="${{ needs.Precheck.outputs.report }}"
@@ -145,7 +145,7 @@ jobs:
 
       - name: Run LVS (headless)
         run: |
-          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/lvs/run.lvs" \
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/tech/lvs/run.lvs" \
             -rd input="src/${{ needs.Precheck.outputs.layout }}" \
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd circuit="${{ needs.Precheck.outputs.circuit }}" \
@@ -188,7 +188,7 @@ jobs:
       - name: Run MDP (headless)
         run: |
           mkdir -p mdp
-          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run_mdp.drc" \
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/tech/drc/run_mdp.drc" \
             -rd input="src/${{ needs.Precheck.outputs.layout }}" \
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd output="mdp/${{ needs.Precheck.outputs.mdp_file }}"
@@ -203,7 +203,7 @@ jobs:
 
       - name: Run IP62 DRC (headless)
         run: |
-          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/drc/run_IP62.drc" \
+          klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/tech/drc/run_IP62.drc" \
             -rd input="mdp/${{ needs.Precheck.outputs.mdp_file }}" \
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd report="${{ needs.Precheck.outputs.report }}"

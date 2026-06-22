@@ -145,6 +145,7 @@ jobs:
 
       - name: Run LVS (headless)
         run: |
+          set -euo pipefail
           NETLIST_FLAG=""
           if [ -n "${{ needs.Precheck.outputs.lvs_flag }}" ]; then
             NETLIST_FLAG="-rd netlist_only"
@@ -154,7 +155,11 @@ jobs:
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd circuit="${{ needs.Precheck.outputs.circuit }}" \
             -rd extracted="${{ needs.Precheck.outputs.extracted }}" \
-            ${NETLIST_FLAG}
+            ${NETLIST_FLAG} 2>&1 | tee lvs_output.log
+          if grep -q "ERROR : Netlists don't match" lvs_output.log; then
+            echo "LVS FAILED -> Netlists don't match"
+            exit 1
+          fi
 
       - name: Upload extracted netlist
         uses: actions/upload-artifact@v4

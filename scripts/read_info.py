@@ -55,7 +55,7 @@ def build_outputs(data: dict[str, Any]) -> dict[str, str]:
     top_cell = str(require_value(gds, "top_cell", "gds")).strip()
     gds_ext = str(require_value(gds, "extension", "gds")).strip()
     lvs_ext = str(require_value(lvs, "extension", "lvs")).strip()
-    lvs_flag = str(require_value(lvs, "netlist_only", "lvs")).strip()
+    lvs_flag = "true" if str(require_value(lvs, "netlist_only", "lvs")).strip().lower() == "true" else ""
     mdp_file = str(require_value(mdp, "file", "mdp")).strip()
     pdk_repo = str(require_value(pdk, "repo", "pdk")).strip()
     pdk_ref = str(require_value(pdk, "ref", "pdk")).strip()

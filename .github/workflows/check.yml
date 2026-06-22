@@ -145,12 +145,16 @@ jobs:
 
       - name: Run LVS (headless)
         run: |
+          NETLIST_FLAG=""
+          if [ -n "${{ needs.Precheck.outputs.lvs_flag }}" ]; then
+            NETLIST_FLAG="-rd netlist_only"
+          fi
           klayout -b -r "TR-1um/${{ needs.Precheck.outputs.pdk_dir }}/klayout/tech/lvs/run.lvs" \
             -rd input="src/${{ needs.Precheck.outputs.layout }}" \
             -rd top_cell="${{ needs.Precheck.outputs.top_cell }}" \
             -rd circuit="${{ needs.Precheck.outputs.circuit }}" \
             -rd extracted="${{ needs.Precheck.outputs.extracted }}" \
-            -rd netlist_only="${{ needs.Precheck.outputs.lvs_flag }}"
+            ${NETLIST_FLAG}
 
       - name: Upload extracted netlist
         uses: actions/upload-artifact@v4

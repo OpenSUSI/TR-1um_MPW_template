@@ -17,7 +17,7 @@ from pathlib import Path
 import click
 import pya
 
-FRAME_CELL_NAMES = {"OSS_FRAME", "OSS_FRAME_TEG"}
+FRAME_CELL_NAMES = {"OSS_FRAME", "OSS_FRAME_TEG", "OSS_FRAME_DIO"}
 
 CHIP_SIZE_WIDTH  = 2500.00
 CHIP_SIZE_HEIGHT = 2500.00

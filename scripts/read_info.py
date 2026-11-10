@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -46,6 +47,48 @@ def require_value(section: dict[str, Any], key: str, section_name: str) -> Any:
     return value
 
 
+TOP_CELL_PREFIX = "tr_1um_"
+TOP_CELL_PATTERN = re.compile(r"^tr_1um_[A-Za-z0-9_]+$")
+TEMPLATE_TOP_CELL = "tr_1um_username"
+PROJECT_KEYS = ("title", "author", "description")
+
+
+def warn(message: str) -> None:
+    # GitHub Actions annotation (shown as a warning in the run summary)
+    print(f"::warning title=info.yaml::{message}")
+
+
+def validate_top_cell(top_cell: str) -> None:
+    if not top_cell.startswith(TOP_CELL_PREFIX):
+        fail(f"gds.top_cell '{top_cell}' must start with '{TOP_CELL_PREFIX}'.")
+    if not TOP_CELL_PATTERN.match(top_cell):
+        fail(
+            f"gds.top_cell '{top_cell}' contains invalid characters. "
+            "Use only letters, digits and '_' (e.g. tr_1um_<github_username>)."
+        )
+    if top_cell == TEMPLATE_TOP_CELL:
+        warn(
+            f"gds.top_cell is still the template value '{TEMPLATE_TOP_CELL}'. "
+            "Replace 'username' with your GitHub username."
+        )
+
+
+def validate_project(data: dict[str, Any]) -> None:
+    project = data.get("project")
+    if not isinstance(project, dict):
+        warn("Section 'project' is missing. Please fill in title/author/description.")
+        return
+    empty = [
+        k for k in PROJECT_KEYS
+        if project.get(k) is None or not str(project.get(k)).strip()
+    ]
+    if empty:
+        warn(
+            f"project fields are empty: {', '.join(empty)}. "
+            "Please fill them in before submission."
+        )
+
+
 def build_outputs(data: dict[str, Any]) -> dict[str, str]:
     gds = require_section(data, "gds")
     lvs = require_section(data, "lvs")
@@ -60,6 +103,9 @@ def build_outputs(data: dict[str, Any]) -> dict[str, str]:
     pdk_repo = str(require_value(pdk, "repo", "pdk")).strip()
     pdk_ref = str(require_value(pdk, "ref", "pdk")).strip()
     pdk_dir = str(require_value(pdk, "dir", "pdk")).strip()
+
+    validate_top_cell(top_cell)
+    validate_project(data)
 
     return {
         "top_cell": top_cell,

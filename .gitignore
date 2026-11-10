@@ -1,4 +1,6 @@
-.gitignore
 .DS_Store
+__pycache__/
+*.pyc
 TR-1um/
-script/__pycache__
+mdp/
+lvs_output.log

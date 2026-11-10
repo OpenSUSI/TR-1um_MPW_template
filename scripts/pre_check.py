@@ -96,11 +96,18 @@ def validate_bbox(top_cell: pya.Cell) -> None:
         )
 
 
-def has_required_frame_cell(layout: pya.Layout) -> bool:
-    for cell in layout.each_cell():
-        if cell.name in FRAME_CELL_NAMES:
-            return True
-    return False
+def find_frame_cells(layout: pya.Layout, top_cell: pya.Cell) -> list[str]:
+    """Return frame/TEG cell names actually instantiated under top_cell.
+
+    Only cells reachable from the top cell's hierarchy are considered, so an
+    orphan (unreferenced) frame cell in the GDS does not satisfy the check.
+    """
+    found: set[str] = set()
+    for ci in top_cell.called_cells():
+        name = layout.cell(ci).name
+        if name in FRAME_CELL_NAMES:
+            found.add(name)
+    return sorted(found)
 
 
 @click.command()
@@ -128,11 +135,13 @@ def main(layout_file: Path, expected_top_name: str) -> None:
         f"({CHIP_SIZE_WIDTH / 2:.2f},{CHIP_SIZE_HEIGHT / 2:.2f})."
     )
 
-    if not has_required_frame_cell(layout):
+    frames = find_frame_cells(layout, top_cell)
+    if not frames:
         fail(
-            f"No required OpenSUSI frame/TEG cell found under top cell '{top_cell.name}'. "
-            f"Expected one of: {', '.join(sorted(FRAME_CELL_NAMES))}"
+            f"No required OpenSUSI frame/TEG cell is instantiated under top cell "
+            f"'{top_cell.name}'. Expected one of: {', '.join(sorted(FRAME_CELL_NAMES))}"
         )
+    print(f"OK: Frame/TEG cell instantiated under top cell: {', '.join(frames)}")
 
     ok(
         f"Design '{top_cell.name}' passed pre-check with required OpenSUSI frame/TEG cell."

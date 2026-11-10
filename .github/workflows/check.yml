@@ -11,13 +11,18 @@ on:
   push:
   workflow_dispatch:
 
+# Cancel an in-progress run when a newer commit is pushed to the same ref
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   KLAYOUT_VERSION: "0.30.9"
 
 jobs:
   Precheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       top_cell: ${{ steps.cfg.outputs.top_cell }}
       layout: ${{ steps.cfg.outputs.layout }}
@@ -43,10 +48,11 @@ jobs:
         uses: ./.github/actions/setup-klayout
         with:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
+          install_python: "true"
 
       - name: Install Python dependencies
         run: |
-          python3 -m pip install --user pyyaml click
+          python3 -m pip install pyyaml click
 
       - name: Read info.yaml
         id: cfg
@@ -60,6 +66,16 @@ jobs:
           pdk_ref: ${{ steps.cfg.outputs.pdk_ref }}
           pdk_dir: ${{ steps.cfg.outputs.pdk_dir }}
           checkout_dir: TR-1um
+
+      # Share the exact same ruleset with DRC/LVS/MDP jobs (no re-clone)
+      - name: Upload PDK ruleset for later jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDK_ruleset
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+          path: TR-1um/${{ steps.cfg.outputs.pdk_dir }}
 
       - name: Run pre_check.py
         run: |
@@ -75,30 +91,23 @@ jobs:
           path: src/${{ steps.cfg.outputs.layout }}
 
   DRC:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: Precheck
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
         with:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
-      - name: Checkout PDK ruleset
-        uses: ./.github/actions/checkout-pdk
+      - name: Download PDK ruleset
+        uses: actions/download-artifact@v4
         with:
-          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
-          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
-          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
-          checkout_dir: TR-1um
+          name: PDK_ruleset
+          path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
 
       - name: Run DRC (headless)
         run: |
@@ -125,30 +134,23 @@ jobs:
           fi
 
   LVS:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [Precheck, DRC]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
         with:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
-      - name: Checkout PDK ruleset
-        uses: ./.github/actions/checkout-pdk
+      - name: Download PDK ruleset
+        uses: actions/download-artifact@v4
         with:
-          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
-          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
-          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
-          checkout_dir: TR-1um
+          name: PDK_ruleset
+          path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
 
       - name: Run LVS (headless)
         run: |
@@ -176,30 +178,23 @@ jobs:
           path: src/${{ needs.Precheck.outputs.extracted }}
 
   MDP:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [Precheck, DRC, LVS]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
         with:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
-      - name: Checkout PDK ruleset
-        uses: ./.github/actions/checkout-pdk
+      - name: Download PDK ruleset
+        uses: actions/download-artifact@v4
         with:
-          pdk_repo: ${{ needs.Precheck.outputs.pdk_repo }}
-          pdk_ref: ${{ needs.Precheck.outputs.pdk_ref }}
-          pdk_dir: ${{ needs.Precheck.outputs.pdk_dir }}
-          checkout_dir: TR-1um
+          name: PDK_ruleset
+          path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
 
       - name: Run MDP (headless)
         run: |

@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   KLAYOUT_VERSION: "0.30.9"
 
 jobs:
@@ -37,10 +36,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -69,7 +68,7 @@ jobs:
 
       # Share the exact same ruleset with DRC/LVS/MDP jobs (no re-clone)
       - name: Upload PDK ruleset for later jobs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: PDK_ruleset
           if-no-files-found: error
@@ -84,7 +83,7 @@ jobs:
             "src/${{ steps.cfg.outputs.layout }}"
 
       - name: Upload source GDSII artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: GDSII_drawing
           if-no-files-found: error
@@ -96,7 +95,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
@@ -104,7 +103,7 @@ jobs:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
       - name: Download PDK ruleset
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: PDK_ruleset
           path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
@@ -117,7 +116,7 @@ jobs:
             -rd report="${{ needs.Precheck.outputs.report }}"
 
       - name: Upload DRC report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: DRC_report
           if-no-files-found: error
@@ -139,7 +138,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
@@ -147,7 +146,7 @@ jobs:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
       - name: Download PDK ruleset
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: PDK_ruleset
           path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
@@ -171,7 +170,7 @@ jobs:
           fi
 
       - name: Upload extracted netlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Extracted
           if-no-files-found: error
@@ -183,7 +182,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup KLayout
         uses: ./.github/actions/setup-klayout
@@ -191,7 +190,7 @@ jobs:
           klayout_version: ${{ env.KLAYOUT_VERSION }}
 
       - name: Download PDK ruleset
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: PDK_ruleset
           path: TR-1um/${{ needs.Precheck.outputs.pdk_dir }}
@@ -220,7 +219,7 @@ jobs:
             -rd report="${{ needs.Precheck.outputs.report }}"
 
       - name: Upload IP62 DRC report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: DRC_report_MDP
           if-no-files-found: error
@@ -237,7 +236,7 @@ jobs:
           fi
 
       - name: Upload MDP GDSII artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: GDSII_MDP
           if-no-files-found: error
